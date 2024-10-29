@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Clientbase API
-  version: 1.0.0
+  version: 1.0.1
 servers:
   - url: https://v2.clientbase.so
 paths:
@@ -18,21 +18,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - agentId
-                - sendingNumber
-                - receivingNumber
-              properties:
-                agentId:
-                  type: string
-                  description: The ID of the agent to use for the call.
-                sendingNumber:
-                  type: string
-                  description: The phone number to send the call from.
-                receivingNumber:
-                  type: string
-                  description: The phone number to receive the call.
+              $ref: '#/components/schemas/CreateCallRequest'
             example:
               agentId: "agent123"
               sendingNumber: "+1234567890"
@@ -43,27 +29,20 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Call has been initiated.'
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                message: 'Call has been initiated.'
         '500':
           description: An error occurred while initiating the call.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: 'An error occurred while initiating the call.'
-                  details:
-                    type: object
-                    description: Additional error details.
-                    example:
-                      code: 'some_error_code'
-                      message: 'Detailed error message.'
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'An error occurred while initiating the call.'
+                details:
+                  code: 'some_error_code'
+                  message: 'Detailed error message.'
   /api/workspace-details:
     post:
       summary: Get workspace details
@@ -77,37 +56,28 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  workspace:
-                    type: object
-                    description: Workspace details.
-                    additionalProperties: true
-            example:
-              workspace:
-                id: "workspace123"
-                name: "My Workspace"
-                ownerId: "user456"
+                $ref: '#/components/schemas/WorkspaceDetailsResponse'
+              example:
+                workspace:
+                  id: "workspace123"
+                  name: "My Workspace"
+                  ownerId: "user456"
         '404':
           description: Workspace not found.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: 'Workspace not found.'
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Workspace not found.'
         '500':
           description: Internal server error.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: 'Internal server error.'
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Internal server error.'
   /api/agents:
     post:
       summary: Get agent IDs
@@ -121,30 +91,74 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  agentIds:
-                    type: array
-                    items:
-                      type: string
-                    description: List of agent IDs.
-            example:
-              agentIds:
-                - "agent123"
-                - "agent456"
+                $ref: '#/components/schemas/AgentsResponse'
+              example:
+                agentIds:
+                  - "agent123"
+                  - "agent456"
         '500':
           description: Internal server error.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: 'Internal server error.'
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Internal server error.'
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: API_KEY
+  schemas:
+    CreateCallRequest:
+      type: object
+      required:
+        - agentId
+        - sendingNumber
+        - receivingNumber
+      properties:
+        agentId:
+          type: string
+          description: The ID of the agent to use for the call.
+        sendingNumber:
+          type: string
+          description: The phone number to send the call from.
+        receivingNumber:
+          type: string
+          description: The phone number to receive the call.
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message.
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message.
+        details:
+          type: object
+          description: Additional error details.
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    WorkspaceDetailsResponse:
+      type: object
+      properties:
+        workspace:
+          type: object
+          description: Workspace details.
+          additionalProperties: true
+    AgentsResponse:
+      type: object
+      properties:
+        agentIds:
+          type: array
+          description: List of agent IDs.
+          items:
+            type: string
