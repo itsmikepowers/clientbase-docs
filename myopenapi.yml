@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Clientbase API
-  version: 1.0.1
+  version: 1.0.2
 servers:
   - url: https://v2.clientbase.so
 paths:
@@ -11,7 +11,7 @@ paths:
       description: Initiate a call using the specified agent and phone numbers.
       operationId: createCall
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
       requestBody:
         description: Agent and phone number information to initiate the call.
         required: true
@@ -32,6 +32,22 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
               example:
                 message: 'Call has been initiated.'
+        '400':
+          description: Bad Request (e.g., missing API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'API key is required in the header as api-key.'
+        '401':
+          description: Unauthorized (e.g., invalid API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Invalid API key.'
         '500':
           description: An error occurred while initiating the call.
           content:
@@ -49,7 +65,7 @@ paths:
       description: Retrieve details of the workspace associated with the provided API key.
       operationId: getWorkspaceDetails
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
       responses:
         '200':
           description: Workspace details retrieved successfully.
@@ -62,6 +78,22 @@ paths:
                   id: "workspace123"
                   name: "My Workspace"
                   ownerId: "user456"
+        '400':
+          description: Bad Request (e.g., missing API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'API key is required in the header as api-key.'
+        '401':
+          description: Unauthorized (e.g., invalid API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Invalid API key.'
         '404':
           description: Workspace not found.
           content:
@@ -84,7 +116,7 @@ paths:
       description: Retrieve a list of agent IDs associated with the workspace.
       operationId: getAgents
       security:
-        - bearerAuth: []
+        - ApiKeyAuth: []
       responses:
         '200':
           description: Agent IDs retrieved successfully.
@@ -96,6 +128,22 @@ paths:
                 agentIds:
                   - "agent123"
                   - "agent456"
+        '400':
+          description: Bad Request (e.g., missing API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'API key is required in the header as api-key.'
+        '401':
+          description: Unauthorized (e.g., invalid API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'Invalid API key.'
         '500':
           description: Internal server error.
           content:
@@ -106,10 +154,10 @@ paths:
                 error: 'Internal server error.'
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: API_KEY
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
   schemas:
     CreateCallRequest:
       type: object
