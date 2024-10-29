@@ -1,7 +1,7 @@
 {
   "openapi": ["/myopenapi.yml"],
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Clientbase",
   "logo": {
     "dark": "/logo/logoicon.png",
     "light": "/logo/logoicon.png"
@@ -26,12 +26,6 @@
     "name": "Dashboard",
     "url": "https://app.clientbaseai.com"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "navigation": [
     {
       "group": "Get Started",
