@@ -57,11 +57,11 @@
       ]
     },
     {
-      "group": "Google",
+      "group": "Endpoints",
       "pages": [
         "get-agent-ids",
-        "google-maps-search",
-        "google-maps-bulk-search"
+        "get-workspace-details",
+        "create-a-call"
       ]
     }
   ],
