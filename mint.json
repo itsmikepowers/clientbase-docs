@@ -57,17 +57,11 @@
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "Google",
       "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoints",
-      "pages": [
-        "api-reference/get-workspace-details",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "get-agent-ids",
+        "google-maps-search",
+        "google-maps-bulk-search"
       ]
     }
   ],
