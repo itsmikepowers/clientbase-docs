@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Clientbase API
+  version: 1.0.0
+servers:
+  - url: https://v2.clientbase.so
+paths:
+  /api/create-call:
+    post:
+      summary: Create a call
+      description: Initiate a call using the specified agent and phone numbers.
+      operationId: createCall
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Agent and phone number information to initiate the call.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - agentId
+                - sendingNumber
+                - receivingNumber
+              properties:
+                agentId:
+                  type: string
+                  description: The ID of the agent to use for the call.
+                sendingNumber:
+                  type: string
+                  description: The phone number to send the call from.
+                receivingNumber:
+                  type: string
+                  description: The phone number to receive the call.
+            example:
+              agentId: "agent123"
+              sendingNumber: "+1234567890"
+              receivingNumber: "+0987654321"
+      responses:
+        '200':
+          description: Call has been initiated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Call has been initiated.'
+        '500':
+          description: An error occurred while initiating the call.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'An error occurred while initiating the call.'
+                  details:
+                    type: object
+                    description: Additional error details.
+                    example:
+                      code: 'some_error_code'
+                      message: 'Detailed error message.'
+  /api/workspace-details:
+    post:
+      summary: Get workspace details
+      description: Retrieve details of the workspace associated with the provided API key.
+      operationId: getWorkspaceDetails
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Workspace details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workspace:
+                    type: object
+                    description: Workspace details.
+                    additionalProperties: true
+            example:
+              workspace:
+                id: "workspace123"
+                name: "My Workspace"
+                ownerId: "user456"
+        '404':
+          description: Workspace not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Workspace not found.'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal server error.'
+  /api/agents:
+    post:
+      summary: Get agent IDs
+      description: Retrieve a list of agent IDs associated with the workspace.
+      operationId: getAgents
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Agent IDs retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agentIds:
+                    type: array
+                    items:
+                      type: string
+                    description: List of agent IDs.
+            example:
+              agentIds:
+                - "agent123"
+                - "agent456"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal server error.'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API_KEY
