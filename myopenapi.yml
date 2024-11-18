@@ -1,19 +1,19 @@
 openapi: 3.0.0
 info:
   title: Clientbase API
-  version: 1.0.2
+  version: 1.0.3
 servers:
   - url: https://v2.clientbase.so
 paths:
   /api/create-call:
     post:
       summary: Create a call
-      description: Initiate a call using the specified agent and phone numbers.
+      description: Initiate a call using the specified agent, phone numbers, and optional variables for dynamic content.
       operationId: createCall
       security:
         - ApiKeyAuth: []
       requestBody:
-        description: Agent and phone number information to initiate the call.
+        description: Agent, phone number information, and optional variables to initiate the call.
         required: true
         content:
           application/json:
@@ -23,6 +23,9 @@ paths:
               agentId: "agent123"
               sendingNumber: "+1234567890"
               receivingNumber: "+0987654321"
+              variables:
+                birthday: "01/02/2003"
+                appointmentDate: "2023-10-15"
       responses:
         '200':
           description: Call has been initiated.
@@ -33,7 +36,7 @@ paths:
               example:
                 message: 'Call has been initiated.'
         '400':
-          description: Bad Request (e.g., missing API key)
+          description: Bad Request (e.g., missing API key or invalid input)
           content:
             application/json:
               schema:
@@ -175,6 +178,16 @@ components:
         receivingNumber:
           type: string
           description: The phone number to receive the call.
+        variables:
+          type: object
+          description: |
+            Key-value pairs used to replace placeholders in the agent's prompts or messages.
+            Placeholders in the format `[key]` within the agent's configuration will be replaced with the corresponding values.
+          additionalProperties:
+            type: string
+          example:
+            birthday: "01/02/2003"
+            appointmentDate: "2023-10-15"
     SuccessResponse:
       type: object
       properties:
